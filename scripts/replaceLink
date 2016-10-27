@@ -1,0 +1,20 @@
+#!/bin/csh -f
+# Removes link and copies the actual file (following all links) here
+foreach file ($argv)
+    #echo $file
+    set filetype = `file -b $file`
+    #echo $filetype
+    if ($#filetype >= 2) then
+        if ($filetype[1] == "symbolic" && $filetype[2] == "link") then
+            set realpath = `readlink -f $file`
+            set actualFiletype = `file -b $realpath`
+            #echo $actualFiletype
+            if($actualFiletype[1] != "directory") then
+                echo "copying $realpath -> $file"
+                rm $file
+                cp $realpath $file
+            endif
+        endif
+    endif
+end
+

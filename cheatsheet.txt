@@ -1,0 +1,201 @@
+****************************************
+** Useful common info csh/vim/gdb/etc **
+****************************************
+--------
+** csh
+--------
+=> comm command to compare two sorted files
+    grep -Fxv -f first-file.txt second-file.txt
+    Basically looks for all lines in second-file.txt which don't match any line in first-file.txt. Might be slow if the files are large.
+    Also, once you sort the files (Use sort -n if they are numeric), then comm should also have worked. What error does it give? Try this:
+    comm -23 second-file-sorted.txt first-file-sorted.txt
+=> Args in csh alias:
+    alias silly 'echo \!:1 AND \!:2* AND \!*'
+    $ silly hello world hi people
+    hello AND world hi people AND hello world hi people
+    $ silly
+    Bad ! arg selector.
+=> Tab complete case insensitive
+    set autolist = ambiguous
+    set complete = enhance
+=> .cshrc:
+setenv TMP ~/scratch/tmp
+set history  = ( 200 )  # save N previous commands
+set histdup  = ( prev )  # discard repeat commands
+set savehist = ( 200 merge ) # merge all xterms into ~/.history
+=> find useful options
+    -b file = True if the file exists and is block special file.
+    -c file = True if the file exists and is character special file.
+    -d file = True if the file exists and is a directory.
+    -e file = True if the file exists.
+    -f file = True if the file exists and is a regular file
+    -g file = True if the file exists and the set-group-id bit is set.
+    -k file = True if the files' "sticky" bit is set.
+    -L file = True if the file exists and is a symbolic link.
+    -p file = True if the file exists and is a named pipe.
+    -r file = True if the file exists and is readable.
+    -s file = True if the file exists and its size is greater than zero.
+    -s file = True if the file exists and is a socket.
+    -t fd = True if the file descriptor is opened on a terminal.
+    -u file = True if the file exists and its set-user-id bit is set.
+    -w file = True if the file exists and is writable.
+    -x file = True if the file exists and is executable.
+    -O file = True if the file exists and is owned by the effective user id.
+    -G file = True if the file exists and is owned by the effective group id.
+    file1 nt file2 = True if file1 is newer, by modification date, than file2.
+    file1 ot file2 = True if file1 is older than file2.
+    file1 ef file2 = True if file1 and file2 have the same device and inode numbers.
+    -z string = True if the length of the string is 0.
+    -n string = True if the length of the string is non-zero.
+    string1 = string2 = True if the strings are equal.
+    string1 != string2 = True if the strings are not equal.
+    !expr = True if the expr evaluates to false.
+    expr1 a expr2 = True if both expr1 and expr2 are true.
+    expr1 o expr2 = True is either expr1 or expr2 is true.
+#Find files with 0 size and delete
+    find /path/to/files -size 0 -ok -exec rm {} \;
+=> find exec
+    find -exec command {} \;
+        For each result, command {} is executed. All occurences of {} are replaced by the filename. ; is prefixed with a slash to prevent the shell from interpreting it.
+    find -exec command {} +
+        Each result is appended to command and executed afterwards.
+--------
+** vim
+--------
+=> .vimrc:
+" Disable backup and swap files
+set nobackup       "no backup files
+set nowritebackup  "only in case you don't want a backup file while editing
+set noswapfile     "no swap files
+=> Search
+    \< Start-of-word
+    \(Foo\>\) The atom 'Foo' followed by end-of-word
+    \@! Match (with zero length) when the previous atom doesn't match.
+    \k\+ Match one or more Keywords
+    \> Match end-of-word.
+    The use of \@! can be very tricky. It is often easier to use \@<! instead.
+    /\(foo\)\@<!bar => to find all 'bar' strings unless they are part of 'foobar'
+    \(Foo\|Bar\) => match either Foo or Bar
+=> Multi Search
+          multi
+         'magic' 'nomagic'  matches of the preceding atom
+    |/star| * \*  0 or more as many as possible
+    |/\+| \+  \+  1 or more as many as possible (*)
+    |/\=| \=  \=  0 or 1    as many as possible (*)
+    |/\?| \?  \?  0 or 1    as many as possible (*)
+    |/\{| \{n,m}  \{n,m}  n to m    as many as possible (*)
+        \{n}  \{n}  n   exactly (*)
+        \{n,} \{n,} at least n  as many as possible (*)
+        \{,m} \{,m} 0 to m    as many as possible (*)
+        \{} \{} 0 or more as many as possible (same as *) (*)
+    |/\{-|  \{-n,m} \{-n,m} n to m    as few as possible (*)
+        \{-n} \{-n} n   exactly (*)
+        \{-n,}  \{-n,}  at least n  as few as possible (*)
+        \{-,m}  \{-,m}  0 to m    as few as possible (*)
+        \{-}  \{-}  0 or more as few as possible (*)
+                                *E59*
+    |/\@>|  \@> \@> 1, like matching a whole pattern (*)
+    |/\@=|  \@= \@= nothing, requires a match |/zero-width| (*)
+    |/\@!|  \@! \@! nothing, requires NO match |/zero-width| (*)
+    |/\@<=| \@<=  \@<=  nothing, requires a match behind |/zero-width| (*)
+    |/\@<!| \@<!  \@<!  nothing, requires NO match behind |/zero-width| (*)
+    (*) {not in Vi}
+=> Not matching
+    :v =>The traditional approach to find lines not matching a pattern is using the :v
+    :sav junk.log
+    :v/warning/d   => You are now are editing a clone of your original file with all lines not matching "warning" removed and you can edit it at will.
+=> Scroll off
+    :set scrolloff=5 => here are always at least five lines visible above the cursor, and five lines visible below the cursor. default => so=0
+=> Vertically center line : zz to vertically center the line
+=> Vim profiling
+    :profile start profile.log
+    :profile func *
+    :profile file *
+    " At this point do slow actions
+    :profile pause
+    :noautocmd qall!
+=> (abolish.vim): Want to turn fooBar into foo_bar? Press crs (coerce to snake_case). MixedCase (crm), camelCase (crc), snake_case (crs), and UPPER_CASE (cru) are all just 3 keystrokes away.
+--------
+** gdb
+--------
+=> pending breakpoints: set breakpoint pending on
+=> define aliases:
+    define pname
+     p $arg0
+    end
+=> save breakpoints in a file:
+    save breakpoints bp.txt
+--------
+** cscope
+--------
+=> Ctrl-C to change to ignore case mode
+=> Make sure 'set csto=0' is included in your vimrc if you are coding C, and 'set csto=1' is included in your vimrc if you are coding C++
+    this is typically present in cscope_maps.vim in plugins folder.
+--------
+** Doxygen
+--------
+=> Create default Doxyfile
+    doxygen -g
+=> Edit Doxyfile to update preferences
+ - Must change
+    PROJECT_NAME
+    PROJECT_BRIEF
+    OUTPUT_DIRECTORY
+    INPUT
+    FILE_PATTERNS
+    RECURSIVE
+    INPUT_FILTER
+    FILTER_SOURCE_FILES
+ - To make output nicer
+    - Disable Latex
+    - Enable UML Style
+    - Show all attributes
+    MULTILINE_CPP_IS_BRIEF = YES
+    EXTRACT_ALL            = YES
+    EXTRACT_STATIC         = YES
+    SHOW_DIRECTORIES       = YES
+    SOURCE_BROWSER         = YES
+    HTML_DYNAMIC_SECTIONS  = YES
+    USE_MATHJAX            = YES
+    PAPER_TYPE             = letter
+    HIDE_UNDOC_RELATIONS   = NO
+    HAVE_DOT               = YES
+    CALL_GRAPH             = YES
+    CALLER_GRAPH           = YES
+=> Create documentation
+    doxygen
+--------
+** C++
+--------
+=> Decrypt C++ Symbols
+    You can use c++filt to demangle c++ symbols. For instance
+    $ c++filt -n _Z1fv
+    f()
+--------
+** XML
+--------
+First, highlight the XML you want to format.
+Then, in normal mode, type ! xmllint --format -
+Your command-line at the bottom will look like this:
+:'<,'>!xmllint --format -
+Then hit enter.
+Technical Explanation
+The selected text is sent to the xmllint command, then --format'ed,
+and the results of xmllint are placed over your selected text in vim.
+The - at the end of the command is for receiving standard input -
+which, in this case, is the selected text that vim sends to xmllint.
+"Bingo! Let's use xmllint for that!" - I thought immediately.
+xmllint command comes bundled with libxml package on Unix-like systems
+and does really good job at producing pretty output. You can use it like this:
+# shell
+xmllint --format --recover foo.xml
+Okee, so my first approach to reformatting XML in Vim was:
+:1,$!xmllint --format --recover - 2>/dev/null
+Not bad. But writing it every time (or remembering) would be painful. Let's use mentioned equalprg option:
+# .vimrc
+set equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
+Ok... but Y U USE XMLLINT WHEN I'M INDENTIN' MY RUBY CODE?? Ahaa! equalprg need to be set locally only for XML-type buffers. Autocommand did the trick:
+# .vimrc
+au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
+Restarted Vim, typed gg=G and said "Hell yeah!".
+
