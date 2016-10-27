@@ -1,0 +1,33 @@
+source ~/scripts/gdbprinters/stl-views.gdb
+source ~/scripts/gdbprinters/kde-devel-gdb
+set breakpoint pending on
+set print object on
+define hp
+ p $arg0->getScopedName(0,0,'/').c_str()
+end
+define pname
+ p $arg0->getName().c_str()
+end
+define sbp
+ save breakpoints bp.txt
+end
+define mystr
+ set $mystr = (std::string*) malloc(sizeof(std::string))
+ call $mystr->basic_string()
+ call $mystr->assign($arg0)
+end
+define sd
+ p $arg0->decompile()
+end
+define fchild
+ set follow-fork-mode child
+end
+define fparent
+ set follow-fork-mode parent
+end
+define nlpfork
+ b doParseLowPowerIntentPhase1
+ r
+ set follow-fork-mode child
+end
+
