@@ -1,0 +1,13 @@
+set nobeep
+set autologout=0
+limit coredumpsize 0
+set prompt='%B%n@%M:%~%B> '
+setenv EDITOR vim
+set history  = ( 1024 )  # save N previous commands
+set histdup  = ( prev )  # discard repeat commands
+set savehist = ( 1024 merge ) # merge all xterms into ~/.history
+set autoexpand
+# Enable <Tab> to do case insensitive auto-complete
+set autolist = ambiguous
+set complete = enhance
+setenv TZ 'Asia/Calcutta'
