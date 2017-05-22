@@ -3,7 +3,7 @@
 ;; Start
 (require 'package)
 ; list the packages you want
-(setq package-list '(company powerline))
+(setq package-list '(company powerline helm-swoop))
 
 ; list the repositories containing them
 (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
@@ -43,4 +43,35 @@
 (powerline-center-theme)
 (setq powerline-default-separator 'wave)
 
+;; Disable bell
+(setq visible-bell 1)
+
+;; company
+(require 'company)
+
+;; keybindings for company mode
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+
+
+;; helm from https://github.com/emacs-helm/helm
+(require 'helm)
+
+;; Locate the helm-swoop folder to your path
+(require 'helm-swoop)
+
+(global-set-key (kbd "M-i") 'helm-swoop)
+;;(global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+;;(global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+;;(global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+
+(require 'helm-config)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persisten-action)
+
+(global-set-key (kbd "C-x b") 'helm-buffers-list)
+(global-set-key (kbd "C-x r b") 'helm-bookmarks)
+(global-set-key (kbd "C-x m") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
 
