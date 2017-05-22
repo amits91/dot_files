@@ -3,7 +3,7 @@
 ;; Start
 (require 'package)
 ; list the packages you want
-(setq package-list '(company powerline helm-swoop))
+(setq package-list '(company powerline helm-swoop nlinum multiple-cursors ))
 
 ; list the repositories containing them
 (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
@@ -25,13 +25,15 @@
 ;; Basic Emacs setup
 (column-number-mode)
 (show-paren-mode)
+(scroll-bar-mode -1)
+;;(tool-bar-mode -1)
 
 ;; Enable IDO mode and configuration
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-(setq ido-create-new-buffer 'always)
-(setq ido-file-extensions-order '(".org" ".txt" ".py" ".emacs" ".xml" ".el" ".ini" ".cfg" ".cnf"))
+;;(setq ido-enable-flex-matching t)
+;;(setq ido-everywhere t)
+;;(ido-mode 1)
+;;(setq ido-create-new-buffer 'always)
+;;(setq ido-file-extensions-order '(".org" ".txt" ".py" ".emacs" ".xml" ".el" ".ini" ".cfg" ".cnf"))
 
 ;; put backups in one location
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
@@ -75,3 +77,11 @@
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
+;; line numbers
+(nlinum-mode)
+
+;; Multiple cursors
+(require 'multiple-cursors)
+
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
