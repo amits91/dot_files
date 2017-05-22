@@ -3,7 +3,7 @@
 ;; Start
 (require 'package)
 ; list the packages you want
-(setq package-list '(company powerline helm-swoop nlinum multiple-cursors ))
+(setq package-list '(company powerline helm-swoop nlinum multiple-cursors))
 
 ; list the repositories containing them
 (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
