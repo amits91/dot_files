@@ -12,6 +12,7 @@ alias . pwd
 alias c clear
 alias ptime 'echo -n "Starting at: " ;env TZ=Asia/Calcutta date;/usr/bin/time -f "Run Summary:\n Program: %C\n Status : %x\n Time   : %E (%e sec) real, %U user, %S sys\n Memory : %M kB" \!*;echo -n " Finished at: " ;env TZ=Asia/Calcutta date'
 alias tmake '\rm -f err.log > /dev/null;ptime gmake \!*;cat err.log'
+alias freq 'cat \!:1 | uniq -c | sort -nr'
 
 # Personal Aliases
 alias pdhome 'pushd ~'
