@@ -1,39 +1,53 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
+
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+
 Plugin 'othree/xml.vim'
+
 " replace preserving case
 Plugin 'tpope/vim-abolish'
+
 " repeat group of commands
 Plugin 'tpope/vim-repeat'
+
 " YouCompleteMe
 "Plugin 'Valloric/YouCompleteMe'
 "
 " clang_complete
 "Plugin 'rip-rip/clang_complete'
+
 " Causing problem with ctags
 "Plugin 'tpope/vim-sensible'
+
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
 "Plugin 'tpope/vim-fugitive'
+
 " plugin from http://vim-scripts.org/vim/scripts.html
 "Plugin 'L9'
+
 " Git plugin not hosted on GitHub
 "Plugin 'git://git.wincent.com/command-t.git'
+
 " git repos on your local machine (i.e. when working on your own plugin)
 "Plugin 'file:///home/gmarik/path/to/plugin'
+
 " The sparkup vim script is in a subdirectory of this repo called vim.
 " Pass the path to set the runtimepath properly.
 "Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+
 " Avoid a name conflict with L9
 "Plugin 'user/L9', {'name': 'newL9'}
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -48,14 +62,28 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
+
+
 colorscheme default
 if has('mouse')
     set mouse=a
 endif
+" toggle between terminal and vim mouse
+map <silent><F12> :let &mouse=(&mouse == "a"?"":"a")<CR>:call ShowMouseMode()<CR>
+imap <silent><F12> :let &mouse=(&mouse == "a"?"":"a")<CR>:call ShowMouseMode()<CR>
+function ShowMouseMode()
+ if (&mouse == 'a')
+     echo "mouse-vim"
+ else
+     echo "mouse-xterm"
+ endif
+endfunction
+
 set backspace=indent,eol,start
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
 "filetype plugin indent on
+
 " Search related flags
 set hlsearch
 set nowrapscan
@@ -65,16 +93,20 @@ set ignorecase
 set smartcase
 " Show the next match while entering a search
 set incsearch
+
 "set wildmode=list:longest,full
+
 set nocp
 filetype plugin on
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
+
   " Enable file type detection.
   " Use the default filetype settings, so that mail gets 'tw' set to 72,
   " 'cindent' is on in C files, etc.
   " Also load indent files, to automatically do language-dependent indenting.
   filetype plugin indent on
+
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
@@ -84,10 +116,15 @@ if has("autocmd")
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
     \   exe "normal! g`\"" |
     \ endif
+
   augroup END
+
 else
-  set autoindent    " always set autoindenting on
+
+  set autoindent        " always set autoindenting on
+
 endif " has("autocmd")
+
 " use indentation of previous line
 set autoindent
 " use intelligent indentation for C
@@ -96,6 +133,8 @@ set smartindent
 " :0 = aligning case with switch
 " g0 = public/protected/private with class
 " l1 = brackets aligned with case
+
+
 " Sourcing VG related vim plugin
 "so /remote/vgdepot/INFRA_HOME/pub/utils/vg-coding-style.vim
 " ----- VG Start
@@ -103,16 +142,20 @@ set smartindent
 autocmd BufNewFile,BufRead *.vgt{,t} setlocal filetype=vgt
 autocmd BufNewFile,BufRead Master.make set filetype=make
 autocmd BufNewFile,BufRead Master.hier set filetype=make
+
 ":map [[ ?{<CR>w99[{
 ":map ][ /}<CR>b99]}
 ":map ]] j0[[%/{<CR>
 ":map [] k$][%?}<CR>
+
+
 " ----- VG End
 "
 set cino=:0,g0,l1,(0,W4,b1,N-s
 " (0 for aligning unclosed braces
 " b1 align final "break" with case label
 " N-s indent inside c++ namespace
+
 " configure tabwidth and insert spaces instead of tabs
 set tabstop=4        " tab width is 4 spaces
 set shiftwidth=4     " indent also with 4 spaces
@@ -120,50 +163,77 @@ set expandtab        " expand tabs to spaces
 " turn syntax highlighting on
 set t_Co=256
 syntax on
+
 " highlight matching braces
 set showmatch
+
 " leader key
 let mapleader = "\\"
 " treat , also as leader
 :nmap , \
+
 " Key mappings
-map Q :q
+map Q :q^M
+
 " Change Tabs from 4 spaces to <Tab>
-:map <F3> <ESC>:se noexpandtab :se list :se listchars=tab:>. :echo "Changing tab spaces to \<tab\>"
-:imap <F3> <ESC>:se noexpandtab :se list:se listchars=tab:>. :echo "Changing tab spaces to \<tab\>" i
+:map <F3> <ESC>:se noexpandtab ^M:se list ^M:se listchars=tab:>. ^M:echo "Changing tab spaces to \<tab\>" ^M
+:imap <F3> <ESC>:se noexpandtab ^M:se list^M:se listchars=tab:>. ^M:echo "Changing tab spaces to \<tab\>"^M i^M
+
 " Change Tabs from <Tab> to 4 spaces
-:map <F2> <ESC>:se expandtab:se list:se listchars=tab:>~:echo "Changing \<tab\> to 4 spaces"
-:imap <F2> <ESC>:se expandtab:se list:se listchars=tab:>~:echo "Changing \<tab\> to 4 spaces" i
+:map <F2> <ESC>:se expandtab^M:se list^M:se listchars=tab:>~^M:echo "Changing \<tab\> to 4 spaces"^M
+:imap <F2> <ESC>:se expandtab^M:se list^M:se listchars=tab:>~^M:echo "Changing \<tab\> to 4 spaces" i^M
+
 " Toggle scrollbind
-:map <F11> <ESC>:set scb!
-:imap <F11> <ESC>:set scb!
+:map <F5> <ESC>:map n nzt^M
+:imap <F5> <ESC>:map n nzt^M
+
+" Toggle scrollbind
+:map <F11> <ESC>:set scb!^M
+:imap <F11> <ESC>:set scb!^M
+
 " Toggle line numbers
-:map <leader>nu <ESC>:set nu!
-":imap <leader>n <ESC>:set nu!
+:map <leader>nu <ESC>:set nu!^M
+":imap <leader>n <ESC>:set nu!^M
+
 " cscope vertical split open file
 :map <leader>cvf <ESC>:vert scs find f
 :imap <leader>cvf <ESC>:vert scs find f
+
 " cscope horizontal split open file
 :map <leader>csf <ESC>:scs find f
 :imap <leader>csf <ESC>:scs find f
+
 " save file
-:map <leader>w <ESC>:w
-:imap <leader>w <ESC>:w
+:map <leader>w <ESC>:w ^M
+:imap <leader>w <ESC>:w ^M
+
 " save file
-:map <leader>W <ESC>:w
-:imap <leader>W <ESC>:w
+:map <leader>W <ESC>:w ^M
+:imap <leader>W <ESC>:w ^M
+
 " Perforce shortcuts
-:map <leader>p4e <ESC>:!p4 edit %
-:map <leader>p4r <ESC>:!p4 revert %
+:map <leader>p4e <ESC>:!p4 edit %^M
+:map <leader>p4r <ESC>:!p4 revert %^M
+
+" convert number to comma separated
+:map <leader>ns, <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1,/g^M``
+:imap <leader>ns, <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1,/g^M``
+
+" convert number to dot separated
+:map <leader>ns. <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1./g^M``
+:imap <leader>ns. <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1./g^M``
+
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
 "if !exists(":DiffOrig")
   "command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-      "\ | wincmd p | diffthis
+          "\ | wincmd p | diffthis
 "endif
+
 " A.vim plugin
 let g:alternateExtensions_CPP = "hh,h,H,HPP,hpp"
+
 " Disable backup and swap files
 set nobackup       "no backup files
 set nowritebackup  "only in case you don't want a backup file while editing
@@ -172,18 +242,25 @@ set noswapfile     "no swap files
 "set backupdir^=~/tmp,/tmp
 "set swapfile
 "set dir=~/tmp
+
 "map <C-K> :pyf ~/.vim/plugin/clang-format.py<cr>
 "imap <C-K> <c-o>:pyf ~/.vim/plugin/clang-format.py<cr>
+
 " Formatting XML files
 "au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -
 au FileType xml setlocal tabstop=2
 au FileType xml setlocal shiftwidth=2
 au FileType xsd setlocal tabstop=2
 au FileType xsd setlocal shiftwidth=2
+autocmd BufNewFile,BufRead *.lib setlocal filetype=lib
+au FileType lib setlocal tabstop=2
+au FileType lib setlocal shiftwidth=2
+
 set scrolloff=5  "Atleast 5 lines visible below/above
 set number
 " Case sensitive replace
 cabbrev S Subvert
+
 " Run shell commands in new window
 command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
 function! s:RunShellCommand(cmdline)
@@ -206,9 +283,17 @@ function! s:RunShellCommand(cmdline)
 endfunction
 " Run xmllint and open in new window
 command! -complete=file -nargs=* Xmllint call s:RunShellCommand('xmllint '.<q-args>)
+
 " for safe pasting
 set pastetoggle=<F10>
+
 " clang_complete
 " path to directory where library can be found
 "let g:clang_library_path='/depot/llvm-3.8.0/lib'
+"
+" Easy window switching
+nmap <silent> <leader><Up> :wincmd k<CR>
+nmap <silent> <leader><Down> :wincmd j<CR>
+nmap <silent> <leader><Left> :wincmd h<CR>
+nmap <silent> <leader><Right> :wincmd l<CR>
 
