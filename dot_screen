@@ -1,0 +1,37 @@
+autodetach on
+
+# enabled if there is no hardstatus setting for your terminal)
+
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
+defscrollback 30000
+
+vbell_msg "bell: window ~%" # Message for visual bell^M
+vbellwait 2 # Seconds to pause the screen for visual bell^M
+vbell off # Turns visual bell off
+
+#bindkey ^[[1;10C next
+#bindkey ^[[1;10D prev
+
+#bindkey  ^[^[[6~ next
+#bindkey  ^[^[[5~ prev
+
+# map <CTRL><left arrow> to prev
+bindkey ^[[1;5D prev
+# map <CTRL><right arrow> to next
+bindkey ^[[1;5C next
+
+#bindkey ^[^T screen /usr/bin/ssh vg-vm-vnc223
+
+#bindkey ^[[1;2B copy
+
+# Allow mouse scroll
+termcapinfo xterm* ti@:te@
+
+# Allow Mouse track
+#mousetrack on
+
+# make ctrl-j instead of ctrl-a
+escape ^Jj
+

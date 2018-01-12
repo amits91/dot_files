@@ -1,0 +1,44 @@
+#!/bin/csh -v
+set DEF = $1
+if (x$DEF == x) then
+    echo "** Error: usage $0 <arg>"
+    exit 1
+endif
+echo $DEF
+set DEF_MAIN = ${DEF}_MAIN
+set DEF_SCR1  = ${DEF}_SCR1
+set DEF_SCR2 = ${DEF}_SCR2
+set DEF_SCR3  = ${DEF}_SCR3
+set DEF_SCR4 = ${DEF}_SCR4
+
+# Build
+screen -AdmS $DEF_SCR1 -c ~asrivas/scripts/screen/childrc -t DBG csh
+screen -S $DEF_SCR1 -X screen -t "OPT" csh
+
+# scr2
+screen -AdmS $DEF_SCR2 -c ~asrivas/scripts/screen/childrc -t DBG csh
+screen -S $DEF_SCR2 -X screen -t "OPT" csh
+
+# scr3
+screen -AdmS $DEF_SCR3 -c ~asrivas/scripts/screen/childrc -t DBG csh
+screen -S $DEF_SCR3 -X screen -t "OPT" csh
+
+# scr4
+screen -AdmS $DEF_SCR4 -c ~asrivas/scripts/screen/childrc -t LOCAL csh
+screen -S $DEF_SCR4 -X screen -t NIGHTLY csh
+
+# main
+screen -AdmS $DEF_MAIN -t $DEF_SCR1 csh
+screen -S $DEF_MAIN -p $DEF_SCR1 -X stuff "screen -r $DEF_SCR1 ^M"
+
+screen -S $DEF_MAIN -X screen -t $DEF_SCR2 csh
+screen -S $DEF_MAIN -p $DEF_SCR2 -X stuff "screen -r $DEF_SCR2 ^M"
+
+screen -S $DEF_MAIN -X screen -t $DEF_SCR3 csh
+screen -S $DEF_MAIN -p $DEF_SCR3 -X stuff "screen -r $DEF_SCR3 ^M"
+
+screen -S $DEF_MAIN -X screen -t $DEF_SCR4 csh
+screen -S $DEF_MAIN -p $DEF_SCR4 -X stuff "screen -r $DEF_SCR4 ^M"
+
+screen -r $DEF_MAIN
+
