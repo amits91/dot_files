@@ -1,7 +1,10 @@
 source ~/scripts/gdbprinters/stl-views.gdb
 source ~/scripts/gdbprinters/kde-devel-gdb
 set breakpoint pending on
+set print inferior-events on
 set print object on
+set confirm off
+
 define hp
  p $arg0->getScopedName(0,0,'/').c_str()
 end
@@ -25,9 +28,13 @@ end
 define fparent
  set follow-fork-mode parent
 end
-define nlpfork
- b doParseLowPowerIntentPhase1
- r
- set follow-fork-mode child
+
+define handleSigpipe
+ handle SIGPIPE nopass, nostop
 end
+      
+define cat
+ shell cat $arg0
+end
+
 
