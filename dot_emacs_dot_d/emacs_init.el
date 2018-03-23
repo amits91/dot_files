@@ -85,3 +85,13 @@
 
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+
+;; Org capture key binding
+(global-set-key (kbd "<f8>") 'org-capture)
+;; Org capture template
+(setq org-capture-templates '(
+    ("j" "Journal Entry"
+	 entry (file+datetree "c:/Users/asrivas/Desktop/AMIT_ALL_FILES/git/org/journal.org")
+         "* Event: %?\n\n  %i\n\n  From: %a"
+         :empty-lines 1)
+))
