@@ -86,12 +86,43 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 
+;; Org indent mode
+(setq org-startup-indented t)
+
 ;; Org capture key binding
-(global-set-key (kbd "<f8>") 'org-capture)
+(global-set-key (kbd "C-c c") 'org-capture)
 ;; Org capture template
-(setq org-capture-templates '(
-    ("j" "Journal Entry"
-	 entry (file+datetree "c:/Users/asrivas/Desktop/AMIT_ALL_FILES/git/org/journal.org")
-         "* Event: %?\n\n  %i\n\n  From: %a"
-         :empty-lines 1)
-))
+(setq org-capture-templates
+      (quote (
+	      ("j" "Journal Entry"
+	       entry (file+datetree "c:/Users/asrivas/Desktop/AMIT_ALL_FILES/git/org/journal.org")
+	       "* Event: %?\n\n  %i\n\n  From: %a"
+	       :empty-lines 1)
+	      ("l" "Log Time" 
+	       entry (file+datetree "c:/Users/asrivas/Desktop/AMIT_ALL_FILES/git/org/timelog.org")
+
+	       "** %U - %^{Activity}  :TIME:")
+("n" "Notes" 
+entry (file+datetree "c:/Users/asrivas/Desktop/AMIT_ALL_FILES/git/org/taskdiary.org")
+
+"* %^{Description}  %^g
+%?
+Added: %U")
+("t" "Task Diary" 
+entry (file+datetree "c:/Users/asrivas/Desktop/AMIT_ALL_FILES/git/org/taskdiary.org")
+
+"* TODO %^{Description}  %^g
+%?
+Added: %U")
+	      )
+	     )
+      )
+
+
+
+;; Org agenda
+(setq org-agenda-files (quote ("c:/Users/asrivas/Desktop/AMIT_ALL_FILES/git/org")
+			      )
+      )
+(global-set-key "\C-ca" 'org-agenda)
+			     
