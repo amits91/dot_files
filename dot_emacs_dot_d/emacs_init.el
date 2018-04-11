@@ -118,6 +118,8 @@ Added: %U")
 	     )
       )
 
+;; Restore file in last session
+(desktop-save-mode 1)
 
 
 ;; Org agenda
