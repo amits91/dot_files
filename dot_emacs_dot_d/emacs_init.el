@@ -121,10 +121,22 @@ Added: %U")
 ;; Restore file in last session
 (desktop-save-mode 1)
 
+;; line wrap in org mode
+;;(define-key org-mode-map "\M-q" 'toggle-truncate-lines)
 
+;; linewrap enabled
+;;(setq org-startup-truncated nil)
+
+;; Org timestamp for DONE
+(setq org-log-done 'time)
 ;; Org agenda
 (setq org-agenda-files (quote ("c:/Users/asrivas/Desktop/AMIT_ALL_FILES/git/org")
 			      )
       )
 (global-set-key "\C-ca" 'org-agenda)
 			     
+;; Org refile
+(setq org-refile-targets '((nil :maxlevel . 9)
+                                (org-agenda-files :maxlevel . 9)))
+(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+(setq org-refile-use-outline-path t)                  ; Show full paths for refiling
