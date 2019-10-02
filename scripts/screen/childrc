@@ -7,8 +7,8 @@ hardstatus alwayslastline
 hardstatus string "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
 defscrollback 30000
 
-vbell_msg "bell: window ~%" # Message for visual bell^M
-vbellwait 2 # Seconds to pause the screen for visual bell^M
+vbell_msg "bell: window ~%" # Message for visual bell
+vbellwait 2 # Seconds to pause the screen for visual bell
 vbell off # Turns visual bell off
 
 #bindkey ^[[1;10C next
@@ -18,13 +18,13 @@ vbell off # Turns visual bell off
 #bindkey  ^[^[[5~ prev
 
 # map <ALT><left arrow> to prev
-bindkey ^[[1;3D prev
+bindkey [1;3D prev
 # map <ALT><right arrow> to next
-bindkey ^[[1;3C next
+bindkey [1;3C next
 
-#bindkey ^[^T screen /usr/bin/ssh vg-vm-vnc223
+#bindkey  screen /usr/bin/ssh vg-vm-vnc223
 
-#bindkey ^[[1;2B copy
+#bindkey [1;2B copy
 
 # Allow mouse scroll
 termcapinfo xterm* ti@:te@
@@ -34,4 +34,3 @@ termcapinfo xterm* ti@:te@
 
 # make ctrl-k instead of ctrl-a
 escape ^Kk
-

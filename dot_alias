@@ -10,14 +10,30 @@ alias soa source ~/.myalias
 alias .. cd ..
 alias . pwd
 alias c clear
-alias ptime 'echo -n "Starting at: " ;env TZ=Asia/Calcutta date;/usr/bin/time -f "Run Summary:\n Program: %C\n Status : %x\n Time   : %E (%e sec) real, %U user, %S sys\n Memory : %M kB" \!*;echo -n " Finished at: " ;env TZ=Asia/Calcutta date'
+alias ptime_ind 'echo -n "Starting at: " ;env TZ=Asia/Calcutta date;/usr/bin/time -f "Run Summary:\n Program: %C\n Status : %x\n Time   : %E (%e sec) real, %U user, %S sys\n Memory : %M kB" \!*;echo -n " Finished at: " ;env TZ=Asia/Calcutta date'
+alias ptime 'echo -n "Starting at: " ;date;/usr/bin/time -f "Run Summary:\n Program: %C\n Status : %x\n Time   : %E (%e sec) real, %U user, %S sys\n Memory : %M kB" \!*;echo -n " Finished at: " ;date'
 alias tmake '\rm -f err.log > /dev/null;ptime gmake \!*;cat err.log'
 alias freq 'cat \!:1 | uniq -c | sort -nr'
+alias diffsort "bash -c 'diff <(sort \!:1) <(sort \!:2) \!:3*'"
+alias diffdir 'diff --brief -Nr'
+alias ratio 'echo "scale=2 ; (\!:1/\!:2)" | bc'
+alias pretty_csv 'cat \!:*| column -t -s, | less -S'
+alias csvsort '(head -n 1 \!:1 && tail -n +2 \!:1 |sort -t, -k\!:2,\!:2 -nr )'
+alias extractcmd 'grep \!:1 upf_commands_profile.instance.csv >! \!:1.csv'
+alias csvfreq 'cut -d, -f \!:2 \!:1 |sort | uniq -c '
+#(head -n 1 plato_reports/upf_commands_profile.instance.csv && tail -n +2 plato_reports/upf_commands_profile.instance.csv | sort -t, -k2,2 -nr)
+alias spcnl 'sed -E -e "s/[[:blank:]]+/\n/g"'
+alias noptr 'sed -i -E -e "s@0x[1-9a-f][0-9a-f]*@[__PTR__]@g"'
+alias cnvnoptr '\cp -f \!:1 \!:1.noptr;noptr \!:1.noptr'
+alias diffnoptr 'cnvnoptr \!:1;cnvnoptr \!:2;tkdiff \!:1.noptr \!:2.noptr'
+alias rename_pane 'printf "\033]2;%s\033\\" "\!:1"'
+
 
 # Personal Aliases
 alias pdhome 'pushd ~'
 alias term 'qsh -P I_RH5'
 alias md mkdir
+alias mcd 'mkdir \!:1; cd \!:1'
 alias x exit
 alias g gvim
 alias ep 'echo $path'
@@ -34,7 +50,9 @@ alias makeupf 'make -f ~/scripts/templates/upf_testcase/Makefile SV_FILES=\!:1 U
 alias relpath "/depot/python/bin/python -c 'import os, sys; print(os.path.relpath(*sys.argv[1:]))' \!*"
 alias abspath 'echo "readlink -m \!*"; readlink -m \!*'
 alias numsep 'sed -i -e :a -e "s/\(.*[0-9]\)\([0-9]\{3\}\)/\1.\2/;ta"'
-
+alias runmail 'echo "-- Mail completions to asrivas@synopsys.com: \!*";\!*; echo "STATUS: $status, PATH: [${cwd}], CMD: [\!*], DATE: `date`" | mutt -s "PROCESS COMPLETED: \!:1" asrivas@synopsys.com'
+alias runmailcc 'echo "-- Mail completions to asrivas@synopsys.com ${RUNMAILCC}: \!*";\!*; echo "STATUS: $status, PATH: [${cwd}], CMD: [\!*], DATE: `date`" | mutt -s "PROCESS COMPLETED: \!:1" asrivas@synopsys.com $RUNMAILCC'
+alias deleteBrokenLinks 'find -L . -name . -o -type d -prune -o -type l -exec rm {} +'
 
 # Perforce Aliases
 alias p4o 'p4 opened'
@@ -44,12 +62,11 @@ alias p4client 'p4 -ztag -F"Client: %Client%, Root: %Root%" client -o'
 alias p4ro 'p4 -ztag -F%depotFile% opened \!* | p4 -x- revert'
 alias p4integ 'echo "p4 integ \!:1/...@\!:2,@\!:2 ..."; p4 integ \!:1/...@\!:2,@\!:2 ...;echo "-- Resolving automatically"; p4 resolve -am; p4 resolve'
 alias p4grep '~/scripts/p4grep.sh ... \!*'
-alias p4path 'p4 -ztag -F%path% where \!*'
+alias p4path 'p4 -ztag -F%path% where `echo \!*|cut -d # -f 1`'
 alias p4res 'echo "p4 resolve -am"; p4 resolve -am; echo "p4 resolve"; p4 resolve'
-alias p4anno 'echo "p4 annotate -cu \!*"; p4 annotate -cu \!*'
+alias p4anno 'echo "p4 annotate -cu -ai \!*"; p4 annotate -cu \!*'
 alias p4changes_cl 'echo "p4 changes -s submitted \!:1/...@\:2,@\:3";p4 changes -s submitted \!:1/...@\!:2,@\!:3'
 alias p4shortdesc 'source ~/scripts/p4shortdesc.csh \!:1'
-
 
 # Git Aliases
 alias ga 'git add -f'
@@ -57,12 +74,15 @@ alias gd 'git diff -b --color-words --minimal'
 alias gs 'git status'
 
 # C++ Aliases
-alias ffcpp 'echo "-- Getting list of files";\rm -f cscope.files; find \!* -type f \( -name "*.[chly]" -o -name "*.cxx" -o -name "*.cc" -o -name "*.cpp" -o -name "*.hpp" -o -name "*.hh" -o -name "*.ll" -o -name "*.yy" -o -name "*.txt" -o -name "Makefile" -o -name "Makefile.*" -o -name "*.txt" -o -name "*.i" -o -name "op_table" -o -name "*.ii" -o -name "*.tab*" -o -name "*.C" -o -name "*.H" -o -name "*.xml" -o -name "*.xsd" -o -name "*.tpl" \) > cscope.files; sort -u cscope.files -o cscope.files'
-alias ffcpplink 'echo "-- Getting list of files links";find \!* -type l \( -ilname "*.[chly]" -o -ilname "*.cxx" -o -ilname "*.cc" -o -ilname "*.cpp" -o -ilname "*.hpp" -o -ilname "*.hh" -o -ilname "*.ll" -o -ilname "*.yy" -o -ilname "*.txt" -o -ilname "Makefile" -o -ilname "Makefile.*" -o -ilname "*.txt" -o -ilname "*.i" -o -ilname "op_table" -o -ilname "*.ii" -o -ilname "*.tab*" -o -ilname "*.C" -o -ilname "*.H" -o -ilname "*.xml" -o -ilname "*.xsd" -o -ilname "*.tpl" \) -exec readlink -e {} \; |tee -a cscope.files; sort -u cscope.files -o cscope.files'
+alias ffcpp 'echo "-- Getting list of files";\rm -f cscope.files; find \!* -type f \( -name "*.[chly]" -o -name "*.cxx" -o -name "*.cc" -o -name "*.cpp" -o -name "*.hpp" -o -name "*.hh" -o -name "*.ll" -o -name "*.yy" -o -name "*.txt" -o -name "Makefile" -o -name "Makefile.*" -o -name "*.txt" -o -name "*.i" -o -name "op_table" -o -name "*.ii" -o -name "*.tab*" -o -name "*.C" -o -name "*.H" -o -name "*.xml" -o -name "*.xsd" -o -name "*.epic" -o -name "*.tpl" \) > cscope.files; sort -u cscope.files -o cscope.files'
+alias ffcpplink 'echo "-- Getting list of files links";find \!* -type l \( -ilname "*.[chly]" -o -ilname "*.cxx" -o -ilname "*.cc" -o -ilname "*.cpp" -o -ilname "*.hpp" -o -ilname "*.hh" -o -ilname "*.ll" -o -ilname "*.yy" -o -ilname "*.txt" -o -ilname "Makefile" -o -ilname "Makefile.*" -o -ilname "*.txt" -o -ilname "*.i" -o -ilname "op_table" -o -ilname "*.ii" -o -ilname "*.tab*" -o -ilname "*.C" -o -ilname "*.H" -o -ilname "*.xml" -o -ilname "*.xsd" -o -ilname "*.epic" -o -ilname "*.tpl" \) -exec readlink -e {} \; |tee -a cscope.files; sort -u cscope.files -o cscope.files'
 alias clntags 'echo "-- Cleaning cscope and tags file"; \rm -f cscope.in.out  cscope.out  cscope.po.out tags > /dev/null;'
 alias rtags 'clntags; echo "-- Building cscope"; cscope -b -q; echo "-- Building ctags"; ctags -L cscope.files --extra=+f'
 alias bldtagspath 'echo "-- Building tags/cscope for \!*";ffcpp \!*; ffcpplink \!*; rtags'
 alias bldtags 'bldtagspath . \!*'
+#alias bldtagslp 'ffcpp lp-src power-src etc vgcommon/plato_test vgcommon/generic \!*; ffcpplink lp-src power-src etc vgcommon/plato_test vgcommon/generic \!*; rtags'
+alias bldtagslp 'bldtagspath lp-src power-src etc vgcommon/plato_test vgcommon/generic vgcommon/svi/simon \!*'
 
 # Scripts
 alias replaceLink '~asrivas/scripts/replaceLink'
+

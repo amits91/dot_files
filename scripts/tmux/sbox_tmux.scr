@@ -1,0 +1,110 @@
+#!/bin/csh -v
+set SB = $1
+if (x$SB == x) then
+    echo "** Error: usage $0 <arg>"
+    exit 1
+endif
+set BRANCH = "TD"
+if (x$2 != x) then
+    set BRANCH = $2
+endif
+echo $SB
+echo $BRANCH
+set SB_NO_DOT = `echo $SB | sed -e "s/\./_/g"`
+echo $SB_NO_DOT
+set SB_MAIN = ${SB_NO_DOT}_MAIN
+set SB_SRC  = ${SB_NO_DOT}_SRC
+set SB_RGR  = ${SB_NO_DOT}_REGR
+set SB_BLD  = ${SB_NO_DOT}_BLD
+set SB_TST  = ${SB_NO_DOT}_TEST
+set SB_TSV  = ${SB_NO_DOT}_TSV
+set SB_VCL  = ${SB_NO_DOT}_VCLP
+
+set WDW_SB_BLD = "${SB_MAIN}:0"
+set WDW_SB_SRC = "${SB_MAIN}:1"
+set WDW_SB_TST = "${SB_MAIN}:2"
+set WDW_SB_RGR = "${SB_MAIN}:3"
+set WDW_SB_TSV = "${SB_MAIN}:4"
+set WDW_SB_VCL = "${SB_MAIN}:5"
+
+set PAN_BLD_DBG = "${WDW_SB_BLD}.0"
+set PAN_BLD_OPT = "${WDW_SB_BLD}.1"
+
+set PAN_SRC = "${WDW_SB_SRC}.0"
+
+set PAN_TST_DBG = "${WDW_SB_TST}.1"
+set PAN_TST_OPT = "${WDW_SB_TST}.0"
+set PAN_TST_REF = "${WDW_SB_TST}.2"
+
+set PAN_RGR = "${WDW_SB_RGR}.0"
+
+set PAN_TSV_DBG = "${WDW_SB_TSV}.1"
+set PAN_TSV_OPT = "${WDW_SB_TSV}.0"
+set PAN_TSV_REF = "${WDW_SB_TSV}.2"
+
+set PAN_VCL_DBG = "${WDW_SB_VCL}.1"
+set PAN_VCL_OPT = "${WDW_SB_VCL}.0"
+set PAN_VCL_REF = "${WDW_SB_VCL}.2"
+
+tmux new-session -d -s $SB_MAIN -n $SB_BLD csh
+tmux split-window -v csh
+
+tmux new-window -n $SB_SRC csh
+
+tmux new-window -n $SB_TST csh
+tmux split-window -v csh
+tmux split-window -h csh
+
+tmux new-window -n $SB_RGR csh
+
+tmux new-window -n $SB_TSV csh
+tmux split-window -v csh
+tmux split-window -h csh
+
+tmux new-window -n $SB_VCL csh
+tmux split-window -v csh
+tmux split-window -h csh
+
+# Change to right folder
+tmux send -t $PAN_BLD_DBG "cdbld ${SB}" ENTER
+tmux send -t $PAN_BLD_OPT "cdbld ${SB}_opt" ENTER
+
+tmux send -t $WDW_SB_SRC "cdsrc ${SB}" ENTER
+
+tmux send -t $PAN_TST_DBG "cd ~/scratch/testcases/platoexe; setbp ${SB}" ENTER
+tmux send -t $PAN_TST_OPT "cd ~/scratch/testcases/platoexe; setbp ${SB}_opt" ENTER
+tmux send -t $PAN_TST_REF "cd ~/scratch/testcases/platoexe; vnightly ${BRANCH}" ENTER
+
+tmux send -t $WDW_SB_RGR "cd ~/scratch/regr/${SB}; setbp ${SB}_opt" ENTER
+
+tmux send -t $PAN_TSV_DBG "cd ~/scratch/regr/${SB}/tsvcs; setbp ${SB}" ENTER
+tmux send -t $PAN_TSV_OPT "cd ~/scratch/regr/${SB}/tsvcs; setbp ${SB}_opt" ENTER
+tmux send -t $PAN_TSV_REF "cd ~/scratch/regr/${SB}/tsvcs; vnightly ${BRANCH}" ENTER
+
+tmux send -t $PAN_VCL_DBG "cd ~/scratch/regr/vclp/${SB}/tsvsi; setbp ${SB}" ENTER
+tmux send -t $PAN_VCL_OPT "cd ~/scratch/regr/vclp/${SB}/tsvsi; setbp ${SB}_opt" ENTER
+tmux send -t $PAN_VCL_REF "cd ~/scratch/regr/vclp/${SB}/tsvsi; vsinightly_o64 ${BRANCH}" ENTER
+
+# Rename Panes
+tmux send -t $PAN_BLD_DBG "printf '\033]2;%s\033\\' '${SB_BLD}:DBG'" ENTER
+tmux send -t $PAN_BLD_OPT "printf '\033]2;%s\033\\' '${SB_BLD}:OPT'" ENTER
+
+tmux send -t $PAN_SRC "printf '\033]2;%s\033\\' '${SB_SRC}'" ENTER
+
+tmux send -t $PAN_TST_DBG "printf '\033]2;%s\033\\' '${SB_TST}:DBG'" ENTER
+tmux send -t $PAN_TST_OPT "printf '\033]2;%s\033\\' '${SB_TST}:OPT'" ENTER
+tmux send -t $PAN_TST_REF "printf '\033]2;%s\033\\' '${SB_TST}:REF'" ENTER
+
+tmux send -t $PAN_RGR "printf '\033]2;%s\033\\' '${SB_RGR}'" ENTER
+
+tmux send -t $PAN_TSV_DBG "printf '\033]2;%s\033\\' '${SB_TSV}:DBG'" ENTER
+tmux send -t $PAN_TSV_OPT "printf '\033]2;%s\033\\' '${SB_TSV}:OPT'" ENTER
+tmux send -t $PAN_TSV_REF "printf '\033]2;%s\033\\' '${SB_TSV}:REF'" ENTER
+
+tmux send -t $PAN_VCL_DBG "printf '\033]2;%s\033\\' '${SB_VCL}:DBG'" ENTER
+tmux send -t $PAN_VCL_OPT "printf '\033]2;%s\033\\' '${SB_VCL}:OPT'" ENTER
+tmux send -t $PAN_VCL_REF "printf '\033]2;%s\033\\' '${SB_VCL}:REF'" ENTER
+
+
+tmux select-window -t $WDW_SB_SRC
+tmux -2 attach-session -d

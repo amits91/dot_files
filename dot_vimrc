@@ -1,64 +1,55 @@
-" Vundle
-"==============================================================================
-"
-set nocompatible
-filetype off
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-"------------------------------------------------------------------------------
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
 
-Plugin 'gmarik/Vundle.vim'
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
 
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-fugitive'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'scrooloose/nerdtree'
-Plugin 'mileszs/ack.vim'
-Plugin 'kien/ctrlp.vim'
-Plugin 'vim-scripts/bufkill.vim'
+Plugin 'othree/xml.vim'
 
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/syntastic'
-Plugin 'ervandew/supertab'
-Plugin 'vim-scripts/Rename2'
+" replace preserving case
+Plugin 'tpope/vim-abolish'
 
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'Lokaltog/vim-powerline'
+" repeat group of commands
+Plugin 'tpope/vim-repeat'
 
-Plugin 'tpope/vim-git'
+" CSV plugin
+Plugin 'chrisbra/csv.vim'
 
-"Plugin 'vim-ruby/vim-ruby'
-"Plugin 'tpope/vim-rails'
-"Plugin 'skwp/vim-rspec'
-"Plugin 'tpope/vim-cucumber'
+" YouCompleteMe
+"Plugin 'Valloric/YouCompleteMe'
+"
+" clang_complete
+"Plugin 'rip-rip/clang_complete'
 
-"Plugin 'fatih/vim-go'
+" Causing problem with ctags
+"Plugin 'tpope/vim-sensible'
 
-Plugin 'pangloss/vim-javascript'
-"Plugin 'mmalecki/vim-node.js'
-"Plugin 'kchmck/vim-coffee-script'
-"Plugin 'nono/jquery.vim'
-"Plugin 'briancollins/vim-jst'
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+"Plugin 'tpope/vim-fugitive'
 
-Plugin 'othree/html5.vim'
-Plugin 'hail2u/vim-css3-syntax'
-"Plugin 'cakebaker/scss-syntax.vim'
-"Plugin 'groenewege/vim-less'
-"Plugin 'wavded/vim-stylus'
-"Plugin 'slim-template/vim-slim.git'
-"Plugin 'tpope/vim-haml'
-"Plugin 'digitaltoad/vim-jade'
-"Plugin 'nono/vim-handlebars'
-"Plugin 'tpope/vim-liquid'
+" plugin from http://vim-scripts.org/vim/scripts.html
+"Plugin 'L9'
 
-"Plugin 'github.com/ajf/puppet-vim'
-"Plugin 'bdd/vim-scala'
-"Plugin 'vim-scripts/Arduino-syntax-file'
-Plugin 'tpope/vim-markdown'
-Plugin 'timcharper/textile.vim'
+" Git plugin not hosted on GitHub
+"Plugin 'git://git.wincent.com/command-t.git'
 
-Plugin 'vim-scripts/csv.vim'
+" git repos on your local machine (i.e. when working on your own plugin)
+"Plugin 'file:///home/gmarik/path/to/plugin'
+
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+
+" Avoid a name conflict with L9
+"Plugin 'user/L9', {'name': 'newL9'}
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -67,268 +58,275 @@ filetype plugin indent on    " required
 "filetype plugin on
 "
 " Brief help
-" :PluginList          - list configured plugins
-" :PluginInstall(!)    - install (update) plugins
-" :PluginSearch(!) foo - search (or refresh cache first) for foo
-" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
-"------------------------------------------------------------------------------
-" basic
-"
-set number
-set ruler          " show line and column number
-syntax enable
-set encoding=utf-8
-set visualbell     " shut vim up
-set noerrorbells
-set history=1000
-set autoread
 
-"------------------------------------------------------------------------------
-" editing
-"
-"set showmatch      " Show matching brackets
-"set matchtime=5    " bracket blinking
-set showcmd        " show incomplete commands in lower right hand corner
-set showmode
-set hidden         " current buffer can be put to the background without writing to disk
-
-" folds
-set foldmethod=indent
-set foldnestmax=3
-set nofoldenable
-
-"------------------------------------------------------------------------------
-" whitespaces
-"
-set autoindent
-set smartindent
-set smarttab     " smarter tab levels
-set nowrap       " don't wrap lines
-set textwidth=0
-set shiftwidth=2 " autoindent is two spaces
-set softtabstop=2
-set tabstop=2    " a tab is two spaces
-set expandtab    " use spaces, not tabs
-set backspace=indent,eol,start " backspace through everything
-
-set list
-set listchars=""          " reset listchars
-set listchars=tab:‣\      " display tabs with a sign
-set listchars+=trail:·    " display trailing whitespaces with a dot
-set listchars+=extends:»  " right wrap
-set listchars+=precedes:« " left wrap
-
-"------------------------------------------------------------------------------
-" searching
-"
-set hlsearch   " highlight searches
-set incsearch  " incremental searching
-set ignorecase " searches are case insensitive
-set smartcase  " unless there is one capital letter
-
-" scrolling
-set scrolloff=5
-set sidescrolloff=5
-set sidescroll=1
-
-"------------------------------------------------------------------------------
-" wild
-"
-set wildmode=list:longest
-set wildmenu
-set wildignore=*.o,*.out,*.obj,*.class
-set wildignore+=*.swp,*~,._*
-set wildignore+=*.png,*.jpg,*.gif
-set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
-set wildignore+=.git,.svn
-set wildignore+=*vim/backups*
-set wildignore+=*sass-cache*
-set wildignore+=*DS_Store*
-set wildignore+=*/vendor/assets/**
-set wildignore+=*/vendor/rails/**
-set wildignore+=*/vendor/cache/**
-set wildignore+=*/vendor/bundle/**
-set wildignore+=*/vendor/submodules/**
-set wildignore+=*/vendor/plugins/**
-set wildignore+=*/vendor/gems/**
-set wildignore+=*/.bundle/**
-set wildignore+=*.gem
-set wildignore+=*/log/**
-set wildignore+=*/tmp/**
-set wildignore+=*/_vendor/**
-
-"------------------------------------------------------------------------------
-" backup & swap
-"
-set noswapfile
-set nobackup
-set nowb
-
-"persistent undo
-silent !mkdir ~/.vim/backups > /dev/null 2>&1
-set undodir=~/.vim/backups
-set undofile
-
-"colorscheme
-
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
-let g:solarized_visibility="high"
-set background=dark
-silent! colorscheme solarized
-
-"------------------------------------------------------------------------------
-" filetypes
-" https://raw.github.com/carlhuda/janus/master/janus/vim/core/before/plugin/filetypes.vim
-"
-function! s:setupWrapping()
-  set wrap
-  set linebreak
-  set textwidth=72
-  set nolist
-endfunction
-
-filetype plugin indent on " Turn on filetype plugins (:help filetype-plugin)
-
-" In Makefiles, use real tabs, not tabs expanded to spaces
-au FileType make set noexpandtab
-
-" make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
-au FileType python set softtabstop=4 tabstop=4 shiftwidth=4 textwidth=79
-
-" to tab highlight for go
-au FileType go set nolist textwidth=0
-
-" clean trailing spaces
-au BufWritePre * kz|:%s/\s\+$//e|'z
-
-" Remember last location in file, but not for commit messages.
-" see :help last-position-jump
-au BufReadPost * if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$")
-  \| exe "normal! g`\"" | endif
-
-au BufNewFile,BufRead *.{md,markdown,mdown,mkd,mkdn,txt} setf markdown | call s:setupWrapping()
-au BufNewFile,BufRead *.json set ft=javascript
-
-"------------------------------------------------------------------------------
-
-if has("statusline") && !&cp
-  set laststatus=2
-  set noequalalways
+colorscheme default
+if has('mouse')
+    set mouse=a
 endif
+" toggle between terminal and vim mouse
+map <silent><F12> :let &mouse=(&mouse == "a"?"":"a")<CR>:call ShowMouseMode()<CR>
+imap <silent><F12> :let &mouse=(&mouse == "a"?"":"a")<CR>:call ShowMouseMode()<CR>
+function ShowMouseMode()
+ if (&mouse == 'a')
+     echo "mouse-vim"
+ else
+     echo "mouse-xterm"
+ endif
+endfunction
 
-"------------------------------------------------------------------------------
-" other settings
+set backspace=indent,eol,start
+set ruler " show the cursor position all the time
+set showcmd " display incomplete commands
+"filetype plugin indent on
+
+" Search related flags
+set hlsearch
+set nowrapscan
+set ignorecase
+" When 'ignorecase' and 'smartcase' are both on, if a pattern contains 
+" an uppercase letter, it is case sensitive, otherwise, it is not.
+set smartcase
+" Show the next match while entering a search
+set incsearch
+
+"set wildmode=list:longest,full
+
+set nocp 
+filetype plugin on 
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  filetype plugin indent on
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  " Also don't do it when the mark is in the first line, that is the default
+  " position when opening a file.
+  autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+
+  augroup END
+
+else
+
+  set autoindent		" always set autoindenting on
+
+endif " has("autocmd")
+
+" use indentation of previous line
+set autoindent
+" use intelligent indentation for C
+set smartindent
+" cindent modifications
+" :0 = aligning case with switch
+" g0 = public/protected/private with class
+" l1 = brackets aligned with case
+
+
+" Sourcing VG related vim plugin
+"so /remote/vgdepot/INFRA_HOME/pub/utils/vg-coding-style.vim
+" ----- VG Start
 "
+autocmd BufNewFile,BufRead *.vgt{,t} setlocal filetype=vgt
+autocmd BufNewFile,BufRead Master.make set filetype=make
+autocmd BufNewFile,BufRead Master.hier set filetype=make
 
-" ack-vim
-let g:ackprg="ag --nogroup --nocolor --column"
+":map [[ ?{<CR>w99[{
+":map ][ /}<CR>b99]}
+":map ]] j0[[%/{<CR>
+":map [] k$][%?}<CR>
 
-" https://github.com/carlhuda/janus/blob/master/janus/vim/tools/janus/after/plugin/syntastic.vim
-let g:syntastic_enable_signs=1
-let g:syntastic_quiet_messages = {'level': 'warnings'}
-let g:syntastic_auto_loc_list=2
 
-""" nerdtree
-let NERDTreeIgnore=['\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$']
-let NERDTreeHijackNetrw = 0
+" ----- VG End
+"
+set cino=:0,g0,l1,(0,W4,b1,N-s
+" (0 for aligning unclosed braces
+" b1 align final "break" with case label
+" N-s indent inside c++ namespace
 
-augroup AuNERDTreeCmd
-autocmd AuNERDTreeCmd VimEnter * call s:CdIfDirectory(expand("<amatch>"))
-autocmd AuNERDTreeCmd FocusGained * call s:UpdateNERDTree()
+" configure tabwidth and insert spaces instead of tabs
+set tabstop=4        " tab width is 4 spaces
+set shiftwidth=4     " indent also with 4 spaces
+set expandtab        " expand tabs to spaces
+" turn syntax highlighting on
+set t_Co=256
+syntax on
 
-" If the parameter is a directory, cd into it
-function s:CdIfDirectory(directory)
-  let explicitDirectory = isdirectory(a:directory)
-  let directory = explicitDirectory || empty(a:directory)
+" highlight matching braces
+set showmatch
 
-  if explicitDirectory
-    exe "cd " . fnameescape(a:directory)
-  endif
+" leader key
+let mapleader = "\\"
+" treat , also as leader
+:nmap , \
 
-  " Allows reading from stdin
-  " ex: git diff | mvim -R -
-  if strlen(a:directory) == 0
-    return
-  endif
+" Key mappings
+map Q :q
 
-  if directory
-    NERDTree
-    wincmd p
-    bd
-  endif
+" Change Tabs from 4 spaces to <Tab>
+:map <F3> <ESC>:se noexpandtab :se list :se listchars=tab:>. :echo "Changing tab spaces to \<tab\>" 
+:imap <F3> <ESC>:se noexpandtab :se list:se listchars=tab:>. :echo "Changing tab spaces to \<tab\>" i
 
-  if explicitDirectory
-    wincmd p
-  endif
+" Change Tabs from <Tab> to 4 spaces
+:map <F2> <ESC>:se expandtab:se list:se listchars=tab:>~:echo "Changing \<tab\> to 4 spaces"
+:imap <F2> <ESC>:se expandtab:se list:se listchars=tab:>~:echo "Changing \<tab\> to 4 spaces" i
+
+" put search on top
+:map <F5> <ESC>:map n nzt
+:imap <F5> <ESC>:map n nzt
+
+" Toggle scrollbind
+:map <F11> <ESC>:set scb!
+:imap <F11> <ESC>:set scb!
+
+" Toggle line numbers
+:map <leader>nu <ESC>:set nu!
+":imap <leader>n <ESC>:set nu!
+
+" cscope vertical split open file
+:map <leader>cvf <ESC>:vert scs find f 
+:imap <leader>cvf <ESC>:vert scs find f 
+
+" cscope horizontal split open file
+:map <leader>csf <ESC>:scs find f 
+:imap <leader>csf <ESC>:scs find f 
+
+" cscope vertical split search pattern
+:map <leader>cve <ESC>:vert scs find e 
+:imap <leader>cve <ESC>:vert scs find e 
+
+" cscope horizontal split search pattern
+:map <leader>cse <ESC>:scs find e 
+:imap <leader>cse <ESC>:scs find e 
+
+" save file
+:map <leader>w <ESC>:w 
+:imap <leader>w <ESC>:w 
+
+" save file
+:map <leader>W <ESC>:w 
+:imap <leader>W <ESC>:w 
+
+" Perforce shortcuts
+:map <leader>p4e <ESC>:!p4 edit %
+:map <leader>p4r <ESC>:!p4 revert %
+
+" convert number to comma separated
+:map <leader>ns, <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1,/g``
+:imap <leader>ns, <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1,/g``
+
+" convert number to dot separated
+:map <leader>ns. <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1./g``
+:imap <leader>ns. <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1./g``
+
+" Numerically sort by 2nd column of csv and remove entries with 0 in 2nd
+" column
+:map <leader>csvsort <ESC>:sort!n/^[^,]*,/\|g/^[^,]*, 0.*/d_ddggP
+:imap <leader>csvsort <ESC>:sort!n/^[^,]*,/\|g/^[^,]*, 0.*/d_ddggP
+
+" cleanup profiler csv and sort them
+:map <leader>profcl <leader>csvsort:%s/,/\|/g<leader>ns,ggVG\T\|
+:imap <leader>profcl <leader>csvsort:%s/,/\|/g<leader>ns,ggVG\T\|
+
+:map <leader>csvs <ESC>:%CSVArrange<ESC>:%CSVSort! 2
+:imap <leader>csvs <ESC>:%CSVArrange<ESC>:%CSVSort! 2
+
+" Convert ptrs to str
+:map <leader>rptr <ESC>:%s@0x[1-9a-f][0-9a-f]*@[__PTR__]@g
+:imap <leader>rptr <ESC>:%s@0x[1-9a-f][0-9a-f]*@[__PTR__]@g
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+"if !exists(":DiffOrig")
+  "command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+		  "\ | wincmd p | diffthis
+"endif
+
+" A.vim plugin
+let g:alternateExtensions_CPP = "hh,h,H,HPP,hpp"
+
+" Disable backup and swap files
+set nobackup       "no backup files
+set nowritebackup  "only in case you don't want a backup file while editing
+set noswapfile     "no swap files
+"set backupdir-=.
+"set backupdir^=~/tmp,/tmp
+"set swapfile
+"set dir=~/tmp
+
+"map <C-K> :pyf ~/.vim/plugin/clang-format.py<cr>
+"imap <C-K> <c-o>:pyf ~/.vim/plugin/clang-format.py<cr>
+
+" Formatting XML files
+"au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -
+au FileType xml setlocal tabstop=2
+au FileType xml setlocal shiftwidth=2
+au FileType xsd setlocal tabstop=2
+au FileType xsd setlocal shiftwidth=2
+autocmd BufNewFile,BufRead *.lib setlocal filetype=lib
+au FileType lib setlocal tabstop=2
+au FileType lib setlocal shiftwidth=2
+
+set scrolloff=5  "Atleast 5 lines visible below/above
+set number
+" Case sensitive replace
+cabbrev S Subvert
+
+" Run shell commands in new window
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  echo a:cmdline
+  let expanded_cmdline = a:cmdline
+  for part in split(a:cmdline, ' ')
+     if part[0] =~ '\v[%#<]'
+        let expanded_part = fnameescape(expand(part))
+        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
+     endif
+  endfor
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:    ' . a:cmdline)
+  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
+  call setline(3,substitute(getline(2),'.','=','g'))
+  execute '$read !'. expanded_cmdline
+  setlocal nomodifiable
+  1
 endfunction
-
-" NERDTree utility function
-function s:UpdateNERDTree(...)
-  let stay = 0
-
-  if(exists("a:1"))
-    let stay = a:1
-  end
-
-  if exists("t:NERDTreeBufName")
-    let nr = bufwinnr(t:NERDTreeBufName)
-    if nr != -1
-      exe nr . "wincmd w"
-      exe substitute(mapcheck("R"), "<CR>", "", "")
-      if !stay
-        wincmd p
-      end
-    endif
-  endif
-endfunction
-"""""
-
-" Default mapping, <leader>n
-autocmd VimEnter * silent! lcd %:p:h
-
-"------------------------------------------------------------------------------
-" mappings (kept to minimal)
-
-map <C-c> <ESC>
-"let mapleader=","
-
-" much more natural cursor movement when wrapping lines are present
-map j gj
-map k gk
-map <Down> gj
-map <Up> gk
-
-" ctrl-p
-map <C-t> :CtrlP<CR>
-imap <C-t> <ESC>:CtrlP<CR>
-map <C-p> :CtrlP<CR>
-imap <C-p> <ESC>:CtrlP<CR>
-
-" unimpaired
-" Bubble single lines
-nmap <C-k> [e
-nmap <C-j> ]e
-
-" Bubble multiple lines
-vmap <C-k> [egv
-vmap <C-j> ]egv
-
-" nerd tree
-map <leader>n :NERDTreeToggle<CR>
-
-" nerd commenter
-map <leader>/ <plug>NERDCommenterToggle<CR>
+" Run xmllint and open in new window
+command! -complete=file -nargs=* Xmllint call s:RunShellCommand('xmllint '.<q-args>)
 
 " for safe pasting
 set pastetoggle=<F10>
 
+" clang_complete
+" path to directory where library can be found
+"let g:clang_library_path='/depot/llvm-3.8.0/lib'
+"
 " Easy window switching
 nmap <silent> <leader><Up> :wincmd k<CR>
 nmap <silent> <leader><Down> :wincmd j<CR>
 nmap <silent> <leader><Left> :wincmd h<CR>
 nmap <silent> <leader><Right> :wincmd l<CR>
+
+" CSV View
+"aug CSV_Editing
+"	au!
+"	au BufRead,BufWritePost *.csv :%ArrangeColumn
+"	au BufWritePre *.csv :%UnArrangeColumn
+"aug end
