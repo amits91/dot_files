@@ -10,6 +10,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+
 Plugin 'othree/xml.vim'
 
 " replace preserving case
@@ -21,6 +22,8 @@ Plugin 'tpope/vim-repeat'
 " CSV plugin
 Plugin 'chrisbra/csv.vim'
 
+"Plugin 'dense-analysis/ale'
+
 " YouCompleteMe
 "Plugin 'Valloric/YouCompleteMe'
 "
@@ -29,27 +32,6 @@ Plugin 'chrisbra/csv.vim'
 
 " Causing problem with ctags
 "Plugin 'tpope/vim-sensible'
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-"Plugin 'tpope/vim-fugitive'
-
-" plugin from http://vim-scripts.org/vim/scripts.html
-"Plugin 'L9'
-
-" Git plugin not hosted on GitHub
-"Plugin 'git://git.wincent.com/command-t.git'
-
-" git repos on your local machine (i.e. when working on your own plugin)
-"Plugin 'file:///home/gmarik/path/to/plugin'
-
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-
-" Avoid a name conflict with L9
-"Plugin 'user/L9', {'name': 'newL9'}
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -330,3 +312,42 @@ nmap <silent> <leader><Right> :wincmd l<CR>
 "	au BufRead,BufWritePost *.csv :%ArrangeColumn
 "	au BufWritePre *.csv :%UnArrangeColumn
 "aug end
+
+" Begin vim-plug block (adjust the path if you use a different plugin manager)
+call plug#begin('~/.vim/plugged')
+
+" Install ALE
+"Plug 'dense-analysis/ale'
+
+" Ctags integration for Vim
+"Plug 'ludovicchabant/vim-gutentags'
+
+" Install coc.nvim (LSP-based completion)
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Cscope integration for Vim
+"Plug 'vim-scripts/cscope_maps.vim'
+
+" End vim-plug block
+call plug#end()
+
+" Enable ctags for auto-tag generation
+"let g:gutentags_enabled = 1
+"let g:gutentags_ctags_tagfile = '.tags'
+"
+"" Cscope key mappings for easy navigation
+"set cscopetag
+"set cscopeverbose
+"nnoremap <leader>cs :cscope find s <C-R>=expand("<cword>")<CR><CR>
+"nnoremap <leader>cg :cscope find g <C-R>=expand("<cword>")<CR><CR>
+"nnoremap <leader>cc :cscope find c <C-R>=expand("<cword>")<CR><CR>
+"nnoremap <leader>ct :cscope find t <C-R>=expand("<cword>")<CR><CR>
+
+" Configure ALE to use clang-format for C++ files
+"let g:ale_fixers = {
+"    \ 'cpp': ['clang-format'],
+"    \ 'c': ['clang-format']
+"    \ }
+"" Automatically fix files on save
+"let g:ale_fix_on_save = 1
+
