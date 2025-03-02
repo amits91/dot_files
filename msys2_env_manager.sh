@@ -22,12 +22,16 @@
 #       └── .config/        # Additional configuration files
 #
 # During restore, the script will update MSYS2 and then copy the configuration files 
-# back into your home directory, regardless of where the restore command is run.
+# back into your home directory ($HOME), regardless of where you run the restore command.
+#
+# In addition, the restore step will:
+#   - Check for diff-so-fancy and install it if missing.
+#   - Check for vim-plug and install/update Vim plugins.
 #
 # Git Usage:
 #   To ensure that all files (including dotfiles) are added to Git, run:
 #       git add -f msys2_env/
-#   Or, modify your .gitignore to exempt the msys2_env folder:
+#   Or modify your .gitignore to exempt the msys2_env folder:
 #       !msys2_env/
 #
 # Migration Steps:
@@ -42,6 +46,15 @@
 #   4. On a new system, clone your repository and run:
 #         ./msys2_env_manager.sh restore
 #
+# Help Text:
+#   The backup folder will contain:
+#       msys2_packages.txt   - a list of installed packages with versions.
+#       config_backup/       - configuration files copied from your home directory,
+#                              including dotfiles.
+#
+# To add all files to Git, use:
+#       git add -f msys2_env/
+#
 # Author: Your Name
 # =============================================================================
 
@@ -50,7 +63,7 @@ BACKUP_DIR="msys2_env"
 PKG_LIST="$BACKUP_DIR/msys2_packages.txt"
 CONFIG_BACKUP="$BACKUP_DIR/config_backup"
 
-# Define home directory (using $HOME)
+# Define home directory
 HOME_DIR="$HOME"
 
 # Ensure the backup directory exists
@@ -75,7 +88,7 @@ show_help() {
     echo "    ├── .gitconfig"
     echo "    └── .config/        # Additional configuration files"
     echo ""
-    echo "During restore, the configuration files will be copied into your home directory ($HOME_DIR)."
+    echo "During restore, configuration files will be copied into your home directory ($HOME_DIR)."
     echo ""
     echo "Git Usage:"
     echo "  To add the backup to Git (ensuring dotfiles are included), run:"
@@ -84,7 +97,7 @@ show_help() {
     echo "      !msys2_env/"
     echo ""
     echo "Usage:"
-    echo "  $0 backup    - Backs up the MSYS2 environment from your home directory to msys2_env/ in the current folder."
+    echo "  $0 backup    - Backs up the MSYS2 environment from your home directory into msys2_env/ in the current folder."
     echo "  $0 restore   - Restores the MSYS2 environment from msys2_env/ to your home directory."
     echo "  $0 help      - Displays this help message."
     echo ""
@@ -140,6 +153,33 @@ restore_env() {
     else
         echo "⚠️ Configuration backup not found in $CONFIG_BACKUP! Skipping configuration restore."
     fi
+
+    # Install diff-so-fancy if not present
+    if ! command -v diff-so-fancy >/dev/null 2>&1; then
+        echo "📦 diff-so-fancy not found. Installing diff-so-fancy..."
+        if [ ! -d "$HOME/.diff-so-fancy" ]; then
+            git clone https://github.com/so-fancy/diff-so-fancy.git "$HOME/.diff-so-fancy"
+        fi
+        if ! grep -q 'export PATH="$HOME/.diff-so-fancy:$PATH"' "$HOME/.bashrc"; then
+            echo 'export PATH="$HOME/.diff-so-fancy:$PATH"' >> "$HOME/.bashrc"
+            echo "✅ diff-so-fancy added to PATH in .bashrc. Please restart your terminal if needed."
+        fi
+    else
+        echo "✅ diff-so-fancy is already installed."
+    fi
+
+    # Ensure vim-plug is installed
+    if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
+        echo "📦 vim-plug not found. Installing vim-plug..."
+        curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
+            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    else
+        echo "✅ vim-plug is already installed."
+    fi
+
+    # Update Vim plugins using vim-plug
+    echo "📦 Installing/updating Vim plugins using vim-plug..."
+    vim +PlugInstall +qall
 
     echo "✅ Restore completed!"
 }
