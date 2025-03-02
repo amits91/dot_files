@@ -1,0 +1,7 @@
+set bell-style none
+"\eP": history-search-backward
+"\eN": history-search-forward
+
+"\e[1;3P": history-search-backward
+"\e[1;3N": history-search-forward
+

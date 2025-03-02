@@ -1,0 +1,353 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+
+Plugin 'othree/xml.vim'
+
+" replace preserving case
+Plugin 'tpope/vim-abolish'
+
+" repeat group of commands
+Plugin 'tpope/vim-repeat'
+
+" CSV plugin
+Plugin 'chrisbra/csv.vim'
+
+"Plugin 'dense-analysis/ale'
+
+" YouCompleteMe
+"Plugin 'Valloric/YouCompleteMe'
+"
+" clang_complete
+"Plugin 'rip-rip/clang_complete'
+
+" Causing problem with ctags
+"Plugin 'tpope/vim-sensible'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+
+colorscheme default
+if has('mouse')
+    set mouse=a
+endif
+" toggle between terminal and vim mouse
+map <silent><F12> :let &mouse=(&mouse == "a"?"":"a")<CR>:call ShowMouseMode()<CR>
+imap <silent><F12> :let &mouse=(&mouse == "a"?"":"a")<CR>:call ShowMouseMode()<CR>
+function ShowMouseMode()
+ if (&mouse == 'a')
+     echo "mouse-vim"
+ else
+     echo "mouse-xterm"
+ endif
+endfunction
+
+set backspace=indent,eol,start
+set ruler " show the cursor position all the time
+set showcmd " display incomplete commands
+"filetype plugin indent on
+
+" Search related flags
+set hlsearch
+set nowrapscan
+set ignorecase
+" When 'ignorecase' and 'smartcase' are both on, if a pattern contains 
+" an uppercase letter, it is case sensitive, otherwise, it is not.
+set smartcase
+" Show the next match while entering a search
+set incsearch
+
+"set wildmode=list:longest,full
+
+set nocp 
+filetype plugin on 
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  filetype plugin indent on
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  " Also don't do it when the mark is in the first line, that is the default
+  " position when opening a file.
+  autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+
+  augroup END
+
+else
+
+  set autoindent		" always set autoindenting on
+
+endif " has("autocmd")
+
+" use indentation of previous line
+set autoindent
+" use intelligent indentation for C
+set smartindent
+" cindent modifications
+" :0 = aligning case with switch
+" g0 = public/protected/private with class
+" l1 = brackets aligned with case
+
+
+" Sourcing VG related vim plugin
+"so /remote/vgdepot/INFRA_HOME/pub/utils/vg-coding-style.vim
+" ----- VG Start
+"
+autocmd BufNewFile,BufRead *.vgt{,t} setlocal filetype=vgt
+autocmd BufNewFile,BufRead Master.make set filetype=make
+autocmd BufNewFile,BufRead Master.hier set filetype=make
+
+":map [[ ?{<CR>w99[{
+":map ][ /}<CR>b99]}
+":map ]] j0[[%/{<CR>
+":map [] k$][%?}<CR>
+
+
+" ----- VG End
+"
+set cino=:0,g0,l1,(0,W4,b1,N-s
+" (0 for aligning unclosed braces
+" b1 align final "break" with case label
+" N-s indent inside c++ namespace
+
+" configure tabwidth and insert spaces instead of tabs
+set tabstop=4        " tab width is 4 spaces
+set shiftwidth=4     " indent also with 4 spaces
+set expandtab        " expand tabs to spaces
+" turn syntax highlighting on
+set t_Co=256
+syntax on
+
+" highlight matching braces
+set showmatch
+
+" leader key
+let mapleader = "\\"
+" treat , also as leader
+:nmap , \
+
+" Key mappings
+map Q :q
+
+" Change Tabs from 4 spaces to <Tab>
+:map <F3> <ESC>:se noexpandtab :se list :se listchars=tab:>. :echo "Changing tab spaces to \<tab\>" 
+:imap <F3> <ESC>:se noexpandtab :se list:se listchars=tab:>. :echo "Changing tab spaces to \<tab\>" i
+
+" Change Tabs from <Tab> to 4 spaces
+:map <F2> <ESC>:se expandtab:se list:se listchars=tab:>~:echo "Changing \<tab\> to 4 spaces"
+:imap <F2> <ESC>:se expandtab:se list:se listchars=tab:>~:echo "Changing \<tab\> to 4 spaces" i
+
+" put search on top
+:map <F5> <ESC>:map n nzt
+:imap <F5> <ESC>:map n nzt
+
+" Toggle scrollbind
+:map <F11> <ESC>:set scb!
+:imap <F11> <ESC>:set scb!
+
+" Toggle line numbers
+:map <leader>nu <ESC>:set nu!
+":imap <leader>n <ESC>:set nu!
+
+" cscope vertical split open file
+:map <leader>cvf <ESC>:vert scs find f 
+:imap <leader>cvf <ESC>:vert scs find f 
+
+" cscope horizontal split open file
+:map <leader>csf <ESC>:scs find f 
+:imap <leader>csf <ESC>:scs find f 
+
+" cscope vertical split search pattern
+:map <leader>cve <ESC>:vert scs find e 
+:imap <leader>cve <ESC>:vert scs find e 
+
+" cscope horizontal split search pattern
+:map <leader>cse <ESC>:scs find e 
+:imap <leader>cse <ESC>:scs find e 
+
+" save file
+:map <leader>w <ESC>:w 
+:imap <leader>w <ESC>:w 
+
+" save file
+:map <leader>W <ESC>:w 
+:imap <leader>W <ESC>:w 
+
+" Perforce shortcuts
+:map <leader>p4e <ESC>:!p4 edit %
+:map <leader>p4r <ESC>:!p4 revert %
+
+" convert number to comma separated
+:map <leader>ns, <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1,/g``
+:imap <leader>ns, <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1,/g``
+
+" convert number to dot separated
+:map <leader>ns. <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1./g``
+:imap <leader>ns. <ESC>:%s/\(\d\)\(\(\d\d\d\)\+\d\@!\)\@=/\1./g``
+
+" Numerically sort by 2nd column of csv and remove entries with 0 in 2nd
+" column
+:map <leader>csvsort <ESC>:sort!n/^[^,]*,/\|g/^[^,]*, 0.*/d_ddggP
+:imap <leader>csvsort <ESC>:sort!n/^[^,]*,/\|g/^[^,]*, 0.*/d_ddggP
+
+" cleanup profiler csv and sort them
+:map <leader>profcl <leader>csvsort:%s/,/\|/g<leader>ns,ggVG\T\|
+:imap <leader>profcl <leader>csvsort:%s/,/\|/g<leader>ns,ggVG\T\|
+
+:map <leader>csvs <ESC>:%CSVArrange<ESC>:%CSVSort! 2
+:imap <leader>csvs <ESC>:%CSVArrange<ESC>:%CSVSort! 2
+
+" Convert ptrs to str
+:map <leader>rptr <ESC>:%s@0x[1-9a-f][0-9a-f]*@[__PTR__]@g
+:imap <leader>rptr <ESC>:%s@0x[1-9a-f][0-9a-f]*@[__PTR__]@g
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+"if !exists(":DiffOrig")
+  "command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+		  "\ | wincmd p | diffthis
+"endif
+
+" A.vim plugin
+let g:alternateExtensions_CPP = "hh,h,H,HPP,hpp"
+
+" Disable backup and swap files
+set nobackup       "no backup files
+set nowritebackup  "only in case you don't want a backup file while editing
+set noswapfile     "no swap files
+"set backupdir-=.
+"set backupdir^=~/tmp,/tmp
+"set swapfile
+"set dir=~/tmp
+
+"map <C-K> :pyf ~/.vim/plugin/clang-format.py<cr>
+"imap <C-K> <c-o>:pyf ~/.vim/plugin/clang-format.py<cr>
+
+" Formatting XML files
+"au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -
+au FileType xml setlocal tabstop=2
+au FileType xml setlocal shiftwidth=2
+au FileType xsd setlocal tabstop=2
+au FileType xsd setlocal shiftwidth=2
+autocmd BufNewFile,BufRead *.lib setlocal filetype=lib
+au FileType lib setlocal tabstop=2
+au FileType lib setlocal shiftwidth=2
+
+set scrolloff=5  "Atleast 5 lines visible below/above
+set number
+" Case sensitive replace
+cabbrev S Subvert
+
+" Run shell commands in new window
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  echo a:cmdline
+  let expanded_cmdline = a:cmdline
+  for part in split(a:cmdline, ' ')
+     if part[0] =~ '\v[%#<]'
+        let expanded_part = fnameescape(expand(part))
+        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
+     endif
+  endfor
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:    ' . a:cmdline)
+  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
+  call setline(3,substitute(getline(2),'.','=','g'))
+  execute '$read !'. expanded_cmdline
+  setlocal nomodifiable
+  1
+endfunction
+" Run xmllint and open in new window
+command! -complete=file -nargs=* Xmllint call s:RunShellCommand('xmllint '.<q-args>)
+
+" for safe pasting
+set pastetoggle=<F10>
+
+" clang_complete
+" path to directory where library can be found
+"let g:clang_library_path='/depot/llvm-3.8.0/lib'
+"
+" Easy window switching
+nmap <silent> <leader><Up> :wincmd k<CR>
+nmap <silent> <leader><Down> :wincmd j<CR>
+nmap <silent> <leader><Left> :wincmd h<CR>
+nmap <silent> <leader><Right> :wincmd l<CR>
+
+" CSV View
+"aug CSV_Editing
+"	au!
+"	au BufRead,BufWritePost *.csv :%ArrangeColumn
+"	au BufWritePre *.csv :%UnArrangeColumn
+"aug end
+
+" Begin vim-plug block (adjust the path if you use a different plugin manager)
+call plug#begin('~/.vim/plugged')
+
+" Install ALE
+"Plug 'dense-analysis/ale'
+
+" Ctags integration for Vim
+"Plug 'ludovicchabant/vim-gutentags'
+
+" Install coc.nvim (LSP-based completion)
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Cscope integration for Vim
+"Plug 'vim-scripts/cscope_maps.vim'
+
+" End vim-plug block
+call plug#end()
+
+" Enable ctags for auto-tag generation
+"let g:gutentags_enabled = 1
+"let g:gutentags_ctags_tagfile = '.tags'
+"
+"" Cscope key mappings for easy navigation
+"set cscopetag
+"set cscopeverbose
+"nnoremap <leader>cs :cscope find s <C-R>=expand("<cword>")<CR><CR>
+"nnoremap <leader>cg :cscope find g <C-R>=expand("<cword>")<CR><CR>
+"nnoremap <leader>cc :cscope find c <C-R>=expand("<cword>")<CR><CR>
+"nnoremap <leader>ct :cscope find t <C-R>=expand("<cword>")<CR><CR>
+
+" Configure ALE to use clang-format for C++ files
+"let g:ale_fixers = {
+"    \ 'cpp': ['clang-format'],
+"    \ 'c': ['clang-format']
+"    \ }
+"" Automatically fix files on save
+"let g:ale_fix_on_save = 1
+
