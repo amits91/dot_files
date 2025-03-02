@@ -1,49 +1,57 @@
-
 #!/bin/bash
 # =============================================================================
 # MSYS2 Environment Backup and Restore Script (No Tarball)
 # =============================================================================
 # This script automates backing up and restoring your MSYS2 environment.
 #
-# It saves the following information into the backup directory (msys2_env/):
+# It backs up the following items from your home directory (~):
 #
-# msys2_env/
-# ├── msys2_packages.txt   # List of explicitly installed packages
-# └── config_backup/        # Saved configuration files
-#     ├── .bashrc
-#     ├── .vimrc
-#     ├── .tcshrc
-#     ├── .gitconfig
-#     └── .config/         # Additional configuration files
+#   - A list of explicitly installed packages (using pacman -Qe)
+#   - Configuration files: .bashrc, .vimrc, .tcshrc, .gitconfig, and the entire .config/ directory.
 #
-# Usage:
-#   ./msys2_env_manager.sh backup      - Backs up the MSYS2 environment to msys2_env/
-#   ./msys2_env_manager.sh restore     - Restores the environment from msys2_env/
-#   ./msys2_env_manager.sh help        - Displays this help message
+# The backup is stored in a folder named "msys2_env" created in the current working directory.
+#
+# Backup Structure:
+#   msys2_env/
+#   ├── msys2_packages.txt   # List of explicitly installed packages (with versions)
+#   └── config_backup/       # Saved configuration files (copied from your home directory)
+#       ├── .bashrc
+#       ├── .vimrc
+#       ├── .tcshrc
+#       ├── .gitconfig
+#       └── .config/        # Additional configuration files
+#
+# During restore, the script will update MSYS2 and then copy the configuration files 
+# back into your home directory, regardless of where the restore command is run.
+#
+# Git Usage:
+#   To ensure that all files (including dotfiles) are added to Git, run:
+#       git add -f msys2_env/
+#   Or, modify your .gitignore to exempt the msys2_env folder:
+#       !msys2_env/
 #
 # Migration Steps:
-# 1. On your current MSYS2 system, run:
-#      ./msys2_env_manager.sh backup
-#    This creates the "msys2_env/" folder with the package list and configuration files.
+#   1. On your current MSYS2 system, run:
+#         ./msys2_env_manager.sh backup
+#      This creates the "msys2_env/" folder (in the current directory) with the package list
+#      and configuration files copied from your home directory.
 #
-# 2. To ensure that all files (including dot files) are added to Git, use:
-#      git add -f msys2_env/
-#
-#    Alternatively, modify your .gitignore to exempt the msys2_env folder:
-#      !msys2_env/
-#
-# 3. Commit and push the backup to your GitHub repository.
-#
-# 4. On the new system, clone your repository and run:
-#      ./msys2_env_manager.sh restore
+#   2. Add the msys2_env/ folder to Git:
+#         git add -f msys2_env/
+#   3. Commit and push to your GitHub repository.
+#   4. On a new system, clone your repository and run:
+#         ./msys2_env_manager.sh restore
 #
 # Author: Your Name
 # =============================================================================
 
-# Define backup directories and file names
+# Define backup directory and file names (created in the current working directory)
 BACKUP_DIR="msys2_env"
 PKG_LIST="$BACKUP_DIR/msys2_packages.txt"
 CONFIG_BACKUP="$BACKUP_DIR/config_backup"
+
+# Define home directory (using $HOME)
+HOME_DIR="$HOME"
 
 # Ensure the backup directory exists
 mkdir -p "$BACKUP_DIR"
@@ -56,27 +64,29 @@ show_help() {
     echo ""
     echo "This script automates backing up and restoring your MSYS2 environment."
     echo ""
-    echo "It will save the following structure in the backup directory (msys2_env/):"
+    echo "Backup Structure (created in the current directory):"
     echo ""
     echo "msys2_env/"
-    echo "├── msys2_packages.txt   # List of explicitly installed packages"
-    echo "└── config_backup/        # Saved configuration files"
+    echo "├── msys2_packages.txt   # List of explicitly installed packages (with versions)"
+    echo "└── config_backup/       # Saved configuration files (copied from your home directory)"
     echo "    ├── .bashrc"
     echo "    ├── .vimrc"
     echo "    ├── .tcshrc"
     echo "    ├── .gitconfig"
-    echo "    └── .config/         # Additional configuration files"
+    echo "    └── .config/        # Additional configuration files"
     echo ""
-    echo "To add all files (including dot files) to Git, run the following commands:"
-    echo "  git add -f msys2_env/"
+    echo "During restore, the configuration files will be copied into your home directory ($HOME_DIR)."
     echo ""
-    echo "Alternatively, modify your .gitignore to exempt the msys2_env folder:"
-    echo "  !msys2_env/"
+    echo "Git Usage:"
+    echo "  To add the backup to Git (ensuring dotfiles are included), run:"
+    echo "      git add -f msys2_env/"
+    echo "  Alternatively, modify your .gitignore to exempt the msys2_env folder:"
+    echo "      !msys2_env/"
     echo ""
     echo "Usage:"
-    echo "  $0 backup    - Backs up the MSYS2 environment to msys2_env/"
-    echo "  $0 restore   - Restores the MSYS2 environment from msys2_env/"
-    echo "  $0 help      - Displays this help message"
+    echo "  $0 backup    - Backs up the MSYS2 environment from your home directory to msys2_env/ in the current folder."
+    echo "  $0 restore   - Restores the MSYS2 environment from msys2_env/ to your home directory."
+    echo "  $0 help      - Displays this help message."
     echo ""
     echo "Migration Steps:"
     echo "  1. Run '$0 backup' on your current MSYS2 system."
@@ -89,18 +99,18 @@ show_help() {
 
 # Function to backup MSYS2 environment
 backup_env() {
-    echo "🔄 Backing up MSYS2 environment..."
+    echo "🔄 Backing up MSYS2 environment from home directory ($HOME_DIR)..."
     
     # Backup installed packages
     echo "📦 Saving package list to $PKG_LIST..."
     pacman -Qe > "$PKG_LIST"
 
-    # Backup important configuration files
-    echo "⚙️  Saving configuration files to $CONFIG_BACKUP..."
-    cp ~/.bashrc ~/.bash_profile ~/.vimrc ~/.inputrc ~/.gitconfig "$CONFIG_BACKUP" 2>/dev/null
-    cp ~/.tcshrc "$CONFIG_BACKUP" 2>/dev/null
-    if [ -d ~/.config ]; then
-        cp -r ~/.config "$CONFIG_BACKUP"
+    # Backup important configuration files from home directory
+    echo "⚙️  Copying configuration files from $HOME_DIR to $CONFIG_BACKUP..."
+    cp "$HOME_DIR"/.bashrc "$HOME_DIR"/.bash_profile "$HOME_DIR"/.vimrc "$HOME_DIR"/.inputrc "$HOME_DIR"/.gitconfig "$CONFIG_BACKUP" 2>/dev/null
+    cp "$HOME_DIR"/.tcshrc "$CONFIG_BACKUP" 2>/dev/null
+    if [ -d "$HOME_DIR/.config" ]; then
+        cp -r "$HOME_DIR/.config" "$CONFIG_BACKUP"
     fi
 
     echo "✅ Backup completed! Check the '$BACKUP_DIR' directory."
@@ -108,25 +118,25 @@ backup_env() {
 
 # Function to restore MSYS2 environment
 restore_env() {
-    echo "🔄 Restoring MSYS2 environment..."
+    echo "🔄 Restoring MSYS2 environment to home directory ($HOME_DIR)..."
 
     # Update MSYS2
     echo "📦 Updating MSYS2..."
     pacman -Syu --noconfirm
 
-    # Restore installed packages
+    # Restore installed packages by extracting only package names from msys2_packages.txt
     if [ -f "$PKG_LIST" ]; then
         echo "📦 Installing packages from $PKG_LIST..."
-        pacman -S --needed - < "$PKG_LIST"
+        awk '{print $1}' "$PKG_LIST" | xargs -r pacman -S --needed --noconfirm
     else
         echo "⚠️ Package list not found in $PKG_LIST! Skipping package restore."
     fi
 
-    # Restore configuration files
+    # Restore configuration files to home directory
     if [ -d "$CONFIG_BACKUP" ]; then
-        echo "⚙️  Restoring configuration files from $CONFIG_BACKUP..."
-        cp "$CONFIG_BACKUP"/.* ~/
-        cp -r "$CONFIG_BACKUP"/.config ~/
+        echo "⚙️  Restoring configuration files to $HOME_DIR..."
+        cp "$CONFIG_BACKUP"/.* "$HOME_DIR"/ 2>/dev/null
+        cp -r "$CONFIG_BACKUP"/.config "$HOME_DIR"/ 2>/dev/null
     else
         echo "⚠️ Configuration backup not found in $CONFIG_BACKUP! Skipping configuration restore."
     fi
